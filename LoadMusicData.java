@@ -7,36 +7,15 @@ import java.util.HashMap;
 
 public class LoadMusicData{
 
-	public static void main(String[] args){
-		Connection conn = null;
-		Statement stmt = null;
+	public void loadData(Statement stmt){
 		int i = 0;
-		String username, password, sql;
+		String sql;
 		HashSet<String> albums, artists;
 		HashMap<String, Integer> genres;
 		albums = new HashSet<String>();
 		artists = new HashSet<String>();
 		genres = new HashMap<String, Integer>();
-		String databaseURL = "jdbc:mysql://localhost:3306/musicspace";
-
-		System.out.println("=== Welcome to MusicSpace Workbench ===");
-		Scanner sc = new Scanner(System.in);
-		System.out.print("Enter the Username: ");
-		username = sc.nextLine();
-		System.out.print("Enter the Password for "+username+" : ");
-		password = sc.nextLine();
 		try{
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			conn = DriverManager.getConnection(databaseURL,username,password);
-
-			if(conn == null){
-				System.out.println("Invalid user credentials");
-				return;
-			}else{
-				System.out.println("Successfully logged In!!!");
-			}
-			stmt = conn.createStatement();
-
 		  File myObj = new File("music.csv");
 			Scanner myReader = new Scanner(myObj);
 			myReader.nextLine();
@@ -98,8 +77,6 @@ public class LoadMusicData{
 				stmt.execute(sql);
 			}
 			myReader.close();
-			stmt.close();
-			conn.close();
 		}catch (Exception e) {
 			System.out.println("An error occurred.");
 			e.printStackTrace();

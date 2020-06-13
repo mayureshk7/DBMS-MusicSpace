@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 
 public class CreateDatabase {
 
-	public static void createArtistTable(Statement stmt) throws Exception{
+	public void createArtistTable(Statement stmt) throws Exception{
 		System.out.println("Creating Artist Table");
 		String sql = "DROP TABLE IF EXISTS artist;";
 		stmt.execute(sql);
@@ -19,7 +19,7 @@ public class CreateDatabase {
 		System.out.println("Artist Table Created Successfully");
 	}
 
-	public static void createLabelTable(Statement stmt) throws Exception{
+	public void createLabelTable(Statement stmt) throws Exception{
 		System.out.println("Creating label Table");
 		String sql = "DROP TABLE IF EXISTS label;";
 		stmt.execute(sql);
@@ -36,7 +36,7 @@ public class CreateDatabase {
 		System.out.println("label Table Created Successfully");
 	}
 
-	public static void createGenreTable(Statement stmt) throws Exception{
+	public  void createGenreTable(Statement stmt) throws Exception{
 		System.out.println("Creating genre Table");
 		String sql = "DROP TABLE IF EXISTS genre;";
 		stmt.execute(sql);
@@ -47,7 +47,7 @@ public class CreateDatabase {
 		System.out.println("genre Table Created Successfully");
 	}
 
-	public static void createAlbumTable(Statement stmt) throws Exception{
+	public  void createAlbumTable(Statement stmt) throws Exception{
 		System.out.println("Creating albums Table");
 		String sql = "DROP TABLE IF EXISTS albums;";
 		stmt.execute(sql);
@@ -65,7 +65,7 @@ public class CreateDatabase {
 		System.out.println("albums Table Created Successfully");
 	}
 
-	public static void createSongTable(Statement stmt) throws Exception{
+	public  void createSongTable(Statement stmt) throws Exception{
 		System.out.println("Creating songs Table");
 		String sql = "DROP TABLE IF EXISTS song;";
 		stmt.execute(sql);
@@ -85,7 +85,7 @@ public class CreateDatabase {
 		System.out.println("song Table Created Successfully");
 	}
 
-	public static void createUserTable(Statement stmt) throws Exception{
+	public  void createUserTable(Statement stmt) throws Exception{
 		System.out.println("Creating user  Table");
 		String sql = "DROP TABLE IF EXISTS user;";
 		stmt.execute(sql);
@@ -104,7 +104,7 @@ public class CreateDatabase {
 		System.out.println("user Table Created Successfully");
 	}
 
-	public static void createUserLikesAlbumTable(Statement stmt) throws Exception{
+	public  void createUserLikesAlbumTable(Statement stmt) throws Exception{
 		System.out.println("Creating userlikesartist  Table");
 		String sql = "DROP TABLE IF EXISTS userlikesartist;";
 		stmt.execute(sql);
@@ -118,7 +118,7 @@ public class CreateDatabase {
 		System.out.println("userlikesartist Table Created Successfully");
 	}
 
-	public static void createUserLikesSongTable(Statement stmt) throws Exception{
+	public  void createUserLikesSongTable(Statement stmt) throws Exception{
 		System.out.println("Creating userlikessong  Table");
 		String sql = "DROP TABLE IF EXISTS userlikessong;";
 		stmt.execute(sql);
@@ -132,7 +132,7 @@ public class CreateDatabase {
 		System.out.println("userlikessong Table Created Successfully");
 	}
 
-	public static void createSongReviewTable(Statement stmt) throws Exception{
+	public  void createSongReviewTable(Statement stmt) throws Exception{
 		System.out.println("Creating songReview  Table");
 		String sql = "DROP TABLE IF EXISTS songReview;";
 		stmt.execute(sql);
@@ -147,7 +147,7 @@ public class CreateDatabase {
 		System.out.println("songReview Table Created Successfully");
 	}
 
-	public static void createAlbumReviewTable(Statement stmt) throws Exception{
+	public  void createAlbumReviewTable(Statement stmt) throws Exception{
 		System.out.println("Creating albumReview  Table");
 		String sql = "DROP TABLE IF EXISTS albumReview;";
 		stmt.execute(sql);
@@ -162,7 +162,7 @@ public class CreateDatabase {
 		System.out.println("albumReview Table Created Successfully");
 	}
 
-	public static void createPlaylistTable(Statement stmt) throws Exception{
+	public  void createPlaylistTable(Statement stmt) throws Exception{
 		System.out.println("Creating playlist Table");
 		String sql = "DROP TABLE IF EXISTS playlist;";
 		stmt.execute(sql);
@@ -175,7 +175,7 @@ public class CreateDatabase {
 		System.out.println("playlist Table Created Successfully");
 	}
 
-	public static void createPlaylistSongMappingTable(Statement stmt) throws Exception{
+	public  void createPlaylistSongMappingTable(Statement stmt) throws Exception{
 		System.out.println("Creating playlist song mapping Table");
 		String sql = "DROP TABLE IF EXISTS playlistSongMapping;";
 		stmt.execute(sql);
@@ -188,8 +188,22 @@ public class CreateDatabase {
 		System.out.println("playlistSongMapping Table Created Successfully");
 	}
 
+ 	public void create(Statement stmt) throws Exception{
+		createArtistTable(stmt);
+		createLabelTable(stmt);
+		createGenreTable(stmt);
+		createAlbumTable(stmt);
+		createSongTable(stmt);
+		createUserTable(stmt);
+		createUserLikesAlbumTable(stmt);
+		createUserLikesSongTable(stmt);
+		createSongReviewTable(stmt);
+		createAlbumReviewTable(stmt);
+		createPlaylistTable(stmt);
+		createPlaylistSongMappingTable(stmt);
+	}
 
-	public static void main(String[] args){
+	/*public static void main(String[] args){
 		Connection conn = null;
 		Statement stmt = null;
 		String username, password, sql;
@@ -229,5 +243,5 @@ public class CreateDatabase {
 		}catch(Exception e){
 			System.out.println("Something went wrong "+e);
 		}
-	}
+	}*/
 }

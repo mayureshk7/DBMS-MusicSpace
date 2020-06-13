@@ -6,16 +6,43 @@ import java.sql.*;
 public class MusicSpace{
 
   public static void adminMode(Connection conn, Statement stmt) throws Exception{
+    CreateDatabase cd = new CreateDatabase();
+    LoadMusicData md = new LoadMusicData();
+    DeleteDatabase dd = new DeleteDatabase();
     while(true){
+      System.out.println("\n=========== Options ===========");
       System.out.println("1. Create MusicSpace Database\n2. Truncate the Entire Database");
       System.out.println("3. Load the Databse with music data \n4. Create Procedures and Functions");
       System.out.println("5. Exit User mode");
+      System.out.println("===============================");
       Scanner sc = new Scanner(System.in);
       int input = sc.nextInt();
+      System.out.println("You entered : "+input);
       switch(input){
-        case 1: break;
-        case 2: break;
-        case 3: break;
+        case 1:
+        try{
+          System.out.println("Creating Databases ");
+          cd.create(stmt);
+        }catch(Exception e){
+          System.out.println("Something went wrong, make sure DB is empty");
+        }
+        break;
+        case 2:
+        try{
+          System.out.println("Deleting Databases ");
+          dd.deleteTables(stmt);
+        }catch(Exception e){
+          System.out.println("Something went wrong, Please try again");
+        }
+        break;
+        case 3:
+        try{
+          System.out.println("loading Databases ");
+          md.loadData(stmt);
+        }catch(Exception e){
+          System.out.println("Something went wrong, Try again");
+        }
+        break;
         case 4: break;
         case 5: return;
         default: System.out.println("Invalid Option, Try again");
