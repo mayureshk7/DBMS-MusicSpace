@@ -108,14 +108,14 @@ public class CreateDatabase {
 		System.out.println("Creating userlikesartist  Table");
 		String sql = "DROP TABLE IF EXISTS userlikesartist;";
 		stmt.execute(sql);
-		sql = "CREATE TABLE userlikesartist " +
-                   "(artistLikeID INTEGER PRIMARY KEY, " +
-                   " userID INT, " +
-				   " artistID VARCHAR(25)," +
+		sql = "CREATE TABLE userlikesalbum " +
+           "(albumLikeID INTEGER AUTO_INCREMENT PRIMARY KEY, " +
+           " userID INT, " +
+				   " albumID VARCHAR(25)," +
 				   " CONSTRAINT ulau FOREIGN KEY (userID) REFERENCES user(userID)," +
-				   " CONSTRAINT ulaa FOREIGN KEY (artistID) REFERENCES artist(artistID));";
+				   " CONSTRAINT ulaa FOREIGN KEY (albumID) REFERENCES album(albumID));";
 		stmt.execute(sql);
-		System.out.println("userlikesartist Table Created Successfully");
+		System.out.println("userlikesalbum Table Created Successfully");
 	}
 
 	public  void createUserLikesSongTable(Statement stmt) throws Exception{
@@ -123,8 +123,8 @@ public class CreateDatabase {
 		String sql = "DROP TABLE IF EXISTS userlikessong;";
 		stmt.execute(sql);
 		sql = "CREATE TABLE userlikessong " +
-                   "(songLikeID INTEGER PRIMARY KEY, " +
-                   " userID INT, " +
+          "(songLikeID INT AUTO_INCREMENT PRIMARY KEY, " +
+          " userID INT, " +
 				   " songID VARCHAR(25)," +
 				   " CONSTRAINT ulsu FOREIGN KEY (userID) REFERENCES user(userID)," +
 				   " CONSTRAINT ulss FOREIGN KEY (songID) REFERENCES song(songID));";
@@ -132,13 +132,13 @@ public class CreateDatabase {
 		System.out.println("userlikessong Table Created Successfully");
 	}
 
-	public  void createSongReviewTable(Statement stmt) throws Exception{
-		System.out.println("Creating songReview  Table");
+	public void createSongReviewTable(Statement stmt) throws Exception{
+		System.out.println("Creating songReview Table");
 		String sql = "DROP TABLE IF EXISTS songReview;";
 		stmt.execute(sql);
 		sql = "CREATE TABLE songReview " +
-                   "(sReviewID INTEGER PRIMARY KEY, " +
-                   " userID INT, " +
+          "(sReviewID INTEGER AUTO_INCREMENT PRIMARY KEY, " +
+           " userID INT, " +
 				   " songID VARCHAR(25)," +
 				   " songReview VARCHAR(400), " +
 				   " CONSTRAINT sru FOREIGN KEY (userID) REFERENCES user(userID)," +
@@ -152,8 +152,8 @@ public class CreateDatabase {
 		String sql = "DROP TABLE IF EXISTS albumReview;";
 		stmt.execute(sql);
 		sql = "CREATE TABLE albumReview " +
-                   "(aReviewID INTEGER PRIMARY KEY, " +
-                   " userID INT, " +
+          "(aReviewID INTEGER AUTO_INCREMENT PRIMARY KEY, " +
+          " userID INT, " +
 				   " albumID VARCHAR(25)," +
 				   " albumReview VARCHAR(400), " +
 				   " CONSTRAINT aru FOREIGN KEY (userID) REFERENCES user(userID)," +
@@ -167,9 +167,9 @@ public class CreateDatabase {
 		String sql = "DROP TABLE IF EXISTS playlist;";
 		stmt.execute(sql);
 		sql = "CREATE TABLE playlist " +
-                   "(playlistID INTEGER PRIMARY KEY, " +
+          "(playlistID INTEGER AUTO_INCREMENT PRIMARY KEY, " +
 				   " playlistName VARCHAR(30), " +
-                   " userID INT, " +
+          " userID INT, " +
 				   " CONSTRAINT playlistUser FOREIGN KEY (userID) REFERENCES user(userID));";
 		stmt.execute(sql);
 		System.out.println("playlist Table Created Successfully");
@@ -180,8 +180,8 @@ public class CreateDatabase {
 		String sql = "DROP TABLE IF EXISTS playlistSongMapping;";
 		stmt.execute(sql);
 		sql = "CREATE TABLE playlistSongMapping " +
-                   "(songID VARCHAR(25), " +
-                   " playlistID INT, " +
+          "(songID VARCHAR(25), " +
+          " playlistID INT, " +
 				   " CONSTRAINT psms FOREIGN KEY (songID) REFERENCES song(songID), " +
 				   " CONSTRAINT psmp FOREIGN KEY (playlistID) REFERENCES playlist(playlistID));";
 		stmt.execute(sql);
