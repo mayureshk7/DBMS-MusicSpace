@@ -15,7 +15,7 @@ public class MusicSpace{
       System.out.println("\n=========== Options ===========");
       System.out.println("1. Create MusicSpace Database\n2. Truncate the Entire Database");
       System.out.println("3. Load the Databse with music data \n4. Create Procedures and Functions");
-      System.out.println("5. Exit User mode");
+      System.out.println("5. Exit Admin mode");
       System.out.println("===============================");
       Scanner sc = new Scanner(System.in);
       int input = sc.nextInt();
@@ -116,7 +116,6 @@ public class MusicSpace{
         email = sc.nextLine();
         String sql = "INSERT INTO user (userFName, username, userpass, userStreet, userCity, userCountry, userZip, userPhone, userEmail) " +
                       "VALUE (\""+name+"\",  \""+username+"\", \""+password+"\", \""+street+"\",\""+city+"\",\""+country+"\", "+zip+", \""+phone+"\", \""+email+"\");";
-        System.out.println(sql);
         try{
           stmt.execute(sql);
           sql = "SELECT userID FROM user WHERE username =\""+username+"\";";
@@ -124,6 +123,7 @@ public class MusicSpace{
           while(rs.next()){
             userId = rs.getInt("userID");
           }
+          System.out.println("User Created Successfully");
           rs.close();
           return userId;
         }catch(Exception e){
@@ -137,7 +137,7 @@ public class MusicSpace{
   }
 
   public static void songMode(Statement stmt, int userId){
-    System.out.println("Song Name : ");
+    System.out.print("Song Name : ");
     Scanner sc = new Scanner(System.in);
     String song = sc.nextLine();
     HashMap<Integer, String> hm = new HashMap<Integer, String>();
@@ -154,6 +154,10 @@ public class MusicSpace{
         n++;
         hm.put(n, rs.getString("SongID"));
         System.out.println(n+". Song Name : "+rs.getString("songName"));
+        System.out.println("Song Duration : "+rs.getString("songDuration"));
+        System.out.println("Song Genre : "+rs.getString("genreName"));
+        if(rs.getInt("songYear") != 0)
+          System.out.println("Song Year : "+rs.getString("songYear"));
         System.out.println("Album Name : "+rs.getString("albumName"));
         System.out.println("Artist Name : "+rs.getString("artistName"));
         System.out.println("------------------");
@@ -219,13 +223,126 @@ public class MusicSpace{
     }
   }
 
+  public static void albumMode(Statement stmt, int userId){
+    System.out.print("Album Name : ");
+    Scanner sc = new Scanner(System.in);
+    String album = sc.nextLine();
+    HashMap<Integer, String> hm = new HashMap<Integer, String>();
+    if(album.length() < 3){
+      System.out.println("Enter Atleast 4 characters to search");
+      return;
+    }
+    String sql = "call getAlbumDetails(\""+album+"\");";
+    try{
+      ResultSet rs = stmt.executeQuery(sql);
+      int n = 0;
+      System.out.println("===== Results =====");
+      while(rs.next()) {
+        n++;
+        hm.put(n, rs.getString("albumID"));
+        System.out.println(n+". Album Name : "+rs.getString("albumName"));
+        System.out.println("Artist Name : "+rs.getString("artistName"));
+        System.out.println("Album Year : "+rs.getString("albumYear"));
+        System.out.println("Album Genre : "+rs.getString("albumGenre"));
+        if(rs.getInt("albumYear") != 0)
+          System.out.println("Album Year : "+rs.getString("albumYear"));
+        System.out.println("------------------");
+      }
+      System.out.println(n+" Results matches : "+album);
+      System.out.println("===================");
+      int input = 1;
+      if(n == 0) return;
+      if(n > 1){
+        System.out.println("Select The Album Number : ");
+        input = sc.nextInt();
+        if(input > n || input < 1){
+          System.out.println("Invalid Option");
+          return;
+        }
+      }
+      System.out.println("========= Options =========");
+      System.out.println("1. Like Album\n2. Review Album\n3. Find Album Reviews \n4. Find Album Likes");
+      System.out.println("=========================");
+      int o = sc.nextInt();
+      sc.nextLine();
+      switch(o){
+        case 1: {
+          sql = "Call userlikesalbum("+userId+", \""+hm.get(input)+"\");";
+          stmt.executeQuery(sql);
+          System.out.println("<3 Album Liked!!! ");
+        }
+        break;
+        case 2: {
+          System.out.println("Enter Review : ");
+          String review = sc.nextLine();
+          sql = "Call reviewAlbum("+userId+", \""+hm.get(input)+"\", \""+review+"\");";
+          stmt.executeQuery(sql);
+          System.out.println("\\o/ Album Reviewed!!! ");
+        }
+        break;
+        case 3: {
+          sql = "Call getAlbumReviews(\""+hm.get(input)+"\");";
+          ResultSet rv = stmt.executeQuery(sql);
+          int num = 0;
+          System.out.println("Results: ");
+          while(rv.next()){
+            num++;
+            System.out.println("-----------------------");
+            System.out.println(num+". "+rv.getString("albumReview"));
+          }
+          System.out.println("-----------------------");
+          System.out.println("Found "+num+" reviews!");
+        };
+        break;
+        case 4:{
+          sql = "Call getAlbumLikes(\""+hm.get(input)+"\");";
+          ResultSet rv = stmt.executeQuery(sql);
+          while(rv.next()){
+            System.out.println("Album is Currently Liked By : "+rv.getString("albumCount")+" Users");
+          }
+        }
+        break;
+        default: System.out.println("Invalid Option");;
+      }
+    }catch(Exception e){
+      System.out.println("Something went wrong try again"+e);
+    }
+  }
+
+  public static void artistMode(Statement stmt, int userId){
+    System.out.print("Artist Name : ");
+    Scanner sc = new Scanner(System.in);
+    String artist = sc.nextLine();
+    HashMap<Integer, String> hm = new HashMap<Integer, String>();
+    if(artist.length() < 3){
+      System.out.println("Enter Atleast 4 characters to search");
+      return;
+    }
+    String sql = "call getArtistDetails(\""+artist+"\");";
+    try{
+      ResultSet rs = stmt.executeQuery(sql);
+      int n = 0;
+      System.out.println("===== Results =====");
+      while(rs.next()) {
+        n++;
+        System.out.println(n+". Artist Name : "+rs.getString("artistName"));
+        System.out.println("Artist Location : "+rs.getString("artistLocation"));
+        System.out.println("Artist Hotness : "+rs.getString("artistHotness"));
+        System.out.println("-----------------------");
+      }
+      System.out.println(n+" Results matches : "+artist);
+    }catch(Exception e){
+      System.out.println("Something went wrong try again"+e);
+    }
+  }
+
 
   public static void userMode(Connection conn, Statement stmt) throws Exception{
       int userId = getUser(conn, stmt);
       while(true){
         System.out.println("\n=========== Options ===========");
         System.out.println("1. Explore Song\n2. Explore Album");
-        System.out.println("3. Search/Like Artist \n4. Know Everything About the Song");
+        System.out.println("3. Explore Artist \n4. Know Everything About the Song");
         System.out.println("5. My playlists \n6. Exit");
         System.out.println("===============================");
         Scanner sc = new Scanner(System.in);
@@ -233,8 +350,8 @@ public class MusicSpace{
         sc.nextLine();
         switch(input){
           case 1: songMode(stmt, userId); break;
-          case 2: break;
-          case 3: break;
+          case 2: albumMode(stmt, userId); break;
+          case 3: artistMode(stmt, userId); break;
           case 4: break;
           case 5: break;
           case 6: System.out.println("Exiting ... "); return;
