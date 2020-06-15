@@ -14,7 +14,7 @@ public class MusicSpace{
     while(true){
       System.out.println("\n=========== Options ===========");
       System.out.println("1. Create MusicSpace Database\n2. Truncate the Entire Database");
-      System.out.println("3. Load the Databse with music data \n4. Create Procedures and Functions");
+      System.out.println("3. Load the Database with music data \n4. Create Procedures and Functions");
       System.out.println("5. Exit Admin mode");
       System.out.println("===============================");
       Scanner sc = new Scanner(System.in);
@@ -34,7 +34,7 @@ public class MusicSpace{
           System.out.println("Deleting Databases ");
           dd.deleteTables(stmt);
         }catch(Exception e){
-          System.out.println("Something went wrong, Please try again");
+          System.out.println("Something went wrong, Please try again "+e);
         }
         break;
         case 3:
@@ -175,7 +175,7 @@ public class MusicSpace{
         }
       }
       System.out.println("========= Options =========");
-      System.out.println("1. Like Song\n2. Review Song\n3. Find Song Reviews \n4. Find Song Likes");
+      System.out.println("1. Like Song\n2. Review Song\n3. Find Song Reviews \n4. Find Song Likes \n5. Add to Playlist");
         System.out.println("=========================");
       int o = sc.nextInt();
       sc.nextLine();
@@ -213,6 +213,31 @@ public class MusicSpace{
           ResultSet rv = stmt.executeQuery(sql);
           while(rv.next()){
             System.out.println("Song is Currently Liked By : "+rv.getString("songCount")+" Users");
+          }
+        }
+        break;
+        case 5: {
+          HashMap<Integer, Integer> pl = new HashMap<Integer, Integer>();
+          sql = "SELECT * FROM playlist WHERE userID = "+userId +";";
+          System.out.println("Select The playlist : ");
+          try{
+            ResultSet pp = stmt.executeQuery(sql);
+            int t = 0;
+            while(pp.next()){
+              t++;
+              pl.put(t, pp.getInt("playlistID"));
+              System.out.println(t+". "+pp.getString("playlistName"));
+              System.out.println("-------------------------------");
+            }
+            if(t == 0){ System.out.println("Sorry, There are no playlist!"); return;}
+            int p = sc.nextInt();
+            if(p>t && p < 1){ System.out.println("Invalid option"); return;}
+            sql = "INSERT INTO playlistsongmapping (songID, playlistID) VALUES ("+
+                  "\""+hm.get(input)+"\", "+pl.get(p)+");";
+            stmt.execute(sql);
+            System.out.println("Song added to playlist Successfully!");
+          }catch(Exception e){
+            System.out.println("Something went wrong");
           }
         }
         break;
@@ -313,7 +338,6 @@ public class MusicSpace{
     System.out.print("Artist Name : ");
     Scanner sc = new Scanner(System.in);
     String artist = sc.nextLine();
-    HashMap<Integer, String> hm = new HashMap<Integer, String>();
     if(artist.length() < 3){
       System.out.println("Enter Atleast 4 characters to search");
       return;
@@ -337,13 +361,49 @@ public class MusicSpace{
   }
 
 
+  public static void fullSongMode(Statement stmt, int userId){
+    System.out.print("Song Name : ");
+    Scanner sc = new Scanner(System.in);
+    String song = sc.nextLine();
+    if(song.length() < 3){
+      System.out.println("Enter Atleast 4 characters to search");
+      return;
+    }
+    String sql = "call getFullSongDetails(\""+song+"\");";
+    try{
+      ResultSet rs = stmt.executeQuery(sql);
+      int n = 0;
+      System.out.println("===== Results =====");
+      while(rs.next()) {
+        n++;
+        System.out.println(n+". Song Name : "+rs.getString("songName"));
+        System.out.println("Song Year : "+rs.getString("songYear"));
+        System.out.println("Song Duration : "+rs.getInt("songDuration"));
+        System.out.println("Song Tempo : "+rs.getString("songTempo"));
+        System.out.println("Song Time signature : "+rs.getInt("songTimeSignature"));
+        System.out.println("Song Hotness : "+rs.getString("songHotness"));
+        System.out.println("Album Name : "+rs.getString("albumName"));
+        System.out.println("Album Year : "+rs.getInt("albumYear"));
+        System.out.println("Artist Name : "+rs.getString("artistName"));
+        System.out.println("Artist Location : "+rs.getString("artistLocation"));
+        System.out.println("Artist Hotness : "+rs.getString("artistHotness"));
+        System.out.println("-----------------------");
+      }
+      System.out.println(n+" Results matches : "+song);
+    }catch(Exception e){
+      System.out.println("Something went wrong try again"+e);
+    }
+  }
+
+
+
   public static void userMode(Connection conn, Statement stmt) throws Exception{
       int userId = getUser(conn, stmt);
       while(true){
         System.out.println("\n=========== Options ===========");
         System.out.println("1. Explore Song\n2. Explore Album");
         System.out.println("3. Explore Artist \n4. Know Everything About the Song");
-        System.out.println("5. My playlists \n6. Exit");
+        System.out.println("5. Explore playlists \n6. Exit");
         System.out.println("===============================");
         Scanner sc = new Scanner(System.in);
         int input = sc.nextInt();
@@ -352,12 +412,68 @@ public class MusicSpace{
           case 1: songMode(stmt, userId); break;
           case 2: albumMode(stmt, userId); break;
           case 3: artistMode(stmt, userId); break;
-          case 4: break;
-          case 5: break;
+          case 4: fullSongMode(stmt, userId); break;
+          case 5: playlistMode(stmt, userId); break;
           case 6: System.out.println("Exiting ... "); return;
           default: System.out.println("Invalid option, Try again!");
         }
       }
+  }
+
+  public static void playlistMode(Statement stmt, int userId){
+    System.out.print("1. Create Playlist \n2. My Playlists\n");
+    Scanner sc = new Scanner(System.in);
+    int input = sc.nextInt();
+    String sql = "";
+    sc.nextLine();
+    if(input == 1){
+      System.out.println("Enter the name of Playlist : ");
+      String playlist = sc.nextLine();
+      sql = "INSERT INTO playlist (playlistName, userID) values (\""+playlist+"\", "+userId+");";
+      try{
+        stmt.execute(sql);
+        System.out.println("Playlist Created Successfully");
+      }catch(Exception e){
+        System.out.println("Something went wrong");
+      }
+    }else if(input == 2){
+      HashMap<Integer, Integer> hm = new HashMap<Integer, Integer>();
+      sql = "SELECT * FROM playlist WHERE userID = "+userId +";";
+      try{
+        ResultSet rs = stmt.executeQuery(sql);
+        int i = 0;
+        while(rs.next()){
+          i++;
+          hm.put(i, rs.getInt("playlistID"));
+          System.out.println(i+". Playlist Name : "+rs.getString("playlistName"));
+          System.out.println("-------------------------------");
+        }
+        System.out.println("Found "+i+" playlists!");
+        if(i == 0) return;
+        System.out.println("Select Playlist : ");
+        input = sc.nextInt();
+        sc.nextLine();
+        if(input > i || input < 1){
+          System.out.println("Invalid playlist Number selected");
+          return;
+        }
+        sql = "CALL getSongsFromPlaylist("+hm.get(input)+");";
+        rs = stmt.executeQuery(sql);
+        System.out.println("========= Songs in playlist ==========");
+        int j = 0;
+        while(rs.next()){
+          j++;
+          System.out.println(j+". "+rs.getString("songName"));
+          System.out.println("-------------------------------");
+        }
+        System.out.println("Found "+j+" songs!");
+      }catch(Exception e){
+        System.out.println("Something went wrong");
+      }
+
+    }else{
+      System.out.println("Invalid Option");
+    }
   }
 
 	public static void main(String[] args){

@@ -11,7 +11,7 @@ public class CreateDatabase {
 		stmt.execute(sql);
 		sql = "CREATE TABLE artist " +
                    "(artistID VARCHAR(25) PRIMARY KEY, " +
-                   " artistName VARCHAR(50), " +
+                   " artistName VARCHAR(200), " +
                    " artistTag VARCHAR(50), " +
                    " artistLocation VARCHAR(50), " +
                    " artistHotness DECIMAL(11,10));";
@@ -53,7 +53,7 @@ public class CreateDatabase {
 		stmt.execute(sql);
 		sql = "CREATE TABLE album " +
                    "(albumID VARCHAR(25) PRIMARY KEY, " +
-                   " albumName VARCHAR(100), " +
+                   " albumName VARCHAR(200), " +
                    " albumYear INT, " +
                    " artistID VARCHAR(25), " +
 				   " labelID VARCHAR(25), " +
@@ -71,7 +71,7 @@ public class CreateDatabase {
 		stmt.execute(sql);
 		sql = "CREATE TABLE song " +
                    "(songID VARCHAR(25) PRIMARY KEY, " +
-                   " songName VARCHAR(100), " +
+                   " songName VARCHAR(200), " +
                    " songYear INT, " +
 				   " songDuration INT, " +
 				   " songTimeSignature INT, " +

@@ -19,7 +19,7 @@ public class LoadMusicData{
 		  File myObj = new File("music.csv");
 			Scanner myReader = new Scanner(myObj);
 			myReader.nextLine();
-			while(myReader.hasNextLine() && i < 100) {
+			while(myReader.hasNextLine() && i < 300) {
 				i++;
 				String data = myReader.nextLine();
 				String[] d = data.split(",");

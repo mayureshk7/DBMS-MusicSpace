@@ -4,9 +4,9 @@ public class DeleteDatabase{
 
 	public void deleteTables(Statement stmt) throws Exception{
 		String sql = "";
-    sql= "drop table userlikesartist;";
+    sql= "drop table userlikesalbum;";
     stmt.execute(sql);
-    System.out.println("Deleting userlikesartist table");
+    System.out.println("Deleting userlikesalbum table");
     sql= "drop table userlikessong;";
     stmt.execute(sql);
     System.out.println("Deleting userlikessong table");

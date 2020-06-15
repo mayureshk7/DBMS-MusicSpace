@@ -150,6 +150,19 @@ public class CreateStoredProcedures{
 			System.out.println("getAlbumLikes procedure created");
 	}
 
+	public void CreateGetSongsFromPlaylist(Statement stmt) throws Exception{
+			String sql = "DROP PROCEDURE IF EXISTS getSongsFromPlaylist;";
+			stmt.execute(sql);
+			sql = " CREATE PROCEDURE getSongsFromPlaylist(IN p INT) " +
+			" BEGIN " +
+			" SELECT * FROM playlistSongMapping AS pm JOIN song AS s " +
+			" ON pm.songID = s.songID " +
+			" WHERE playlistID = p;" +
+			" END";
+			stmt.executeUpdate(sql);
+			System.out.println("getSongsFromPlaylist procedure created");
+	}
+
 	public void createProcedures(Statement stmt) throws Exception{
 			createFindSongDetails(stmt);
 			createGetAlbumDetails(stmt);
@@ -162,5 +175,6 @@ public class CreateStoredProcedures{
 			createUserAlbumLikes(stmt);
 			CreateGetAlbumReviews(stmt);
 			CreateGetAlbumLikes(stmt);
+			CreateGetSongsFromPlaylist(stmt);
 	}
 }
