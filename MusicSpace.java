@@ -268,7 +268,7 @@ public class MusicSpace{
         System.out.println(n+". Album Name : "+rs.getString("albumName"));
         System.out.println("Artist Name : "+rs.getString("artistName"));
         System.out.println("Album Year : "+rs.getString("albumYear"));
-        System.out.println("Album Genre : "+rs.getString("albumGenre"));
+        System.out.println("Album Genre : "+rs.getString("genreName"));
         if(rs.getInt("albumYear") != 0)
           System.out.println("Album Year : "+rs.getString("albumYear"));
         System.out.println("------------------");

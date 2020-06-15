@@ -42,7 +42,7 @@ public class CreateDatabase {
 		stmt.execute(sql);
 		sql = "CREATE TABLE genre " +
                    " (genreID INT PRIMARY KEY, " +
-				   " genreName VARCHAR(20));";
+				   " genreName VARCHAR(50));";
 		stmt.execute(sql);
 		System.out.println("genre Table Created Successfully");
 	}
