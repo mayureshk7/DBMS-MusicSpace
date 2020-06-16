@@ -2,6 +2,12 @@ import java.sql.*;
 
 public class DeleteDatabase{
 
+	public void deleteUser(Statement stmt, int userId) throws Exception{
+		String sql = "DELETE FROM user WHERE userID = "+userId+";";
+		stmt.execute(sql);
+		System.out.println("User Deleted Successfully");
+	}
+
 	public void deleteTables(Statement stmt) throws Exception{
 		String sql = "";
     sql= "drop table userlikesalbum;";

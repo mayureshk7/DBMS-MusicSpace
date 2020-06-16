@@ -11,7 +11,7 @@ public class CreateDatabase {
 		stmt.execute(sql);
 		sql = "CREATE TABLE artist " +
                    "(artistID VARCHAR(25) PRIMARY KEY, " +
-                   " artistName VARCHAR(200), " +
+                   " artistName VARCHAR(200) NOT NULL, " +
                    " artistTag VARCHAR(50), " +
                    " artistLocation VARCHAR(50), " +
                    " artistHotness DECIMAL(11,10));";
@@ -23,9 +23,9 @@ public class CreateDatabase {
 		System.out.println("Creating label Table");
 		String sql = "DROP TABLE IF EXISTS label;";
 		stmt.execute(sql);
-		sql = "CREATE TABLE label " +
-                   "(labelID VARCHAR(25) PRIMARY KEY, " +
-                   " labelName VARCHAR(50), " +
+		sql =  "CREATE TABLE label " +
+           "(labelID VARCHAR(25) PRIMARY KEY, " +
+           " labelName VARCHAR(50) NOT NULL, " +
 				   "labelStreet VARCHAR(50), " +
 				   "labelCity VARCHAR(50), " +
 				   "labelCountry VARCHAR(50)," +
@@ -41,8 +41,8 @@ public class CreateDatabase {
 		String sql = "DROP TABLE IF EXISTS genre;";
 		stmt.execute(sql);
 		sql = "CREATE TABLE genre " +
-                   " (genreID INT PRIMARY KEY, " +
-				   " genreName VARCHAR(50));";
+          " (genreID INT PRIMARY KEY, " +
+				  " genreName VARCHAR(50));";
 		stmt.execute(sql);
 		System.out.println("genre Table Created Successfully");
 	}
@@ -52,15 +52,15 @@ public class CreateDatabase {
 		String sql = "DROP TABLE IF EXISTS albums;";
 		stmt.execute(sql);
 		sql = "CREATE TABLE album " +
-                   "(albumID VARCHAR(25) PRIMARY KEY, " +
-                   " albumName VARCHAR(200), " +
-                   " albumYear INT, " +
-                   " artistID VARCHAR(25), " +
+           "(albumID VARCHAR(25) PRIMARY KEY, " +
+           " albumName VARCHAR(200) NOT NULL, " +
+           " albumYear INT, " +
+           " artistID VARCHAR(25), " +
 				   " labelID VARCHAR(25), " +
 				   " genreID INT, " +
-				   " CONSTRAINT artistAlbumConstraint FOREIGN KEY (artistID) REFERENCES artist(artistID)," +
-				   " CONSTRAINT genreAlbumConstraint FOREIGN KEY (genreID) REFERENCES genre(genreID)," +
-				   " CONSTRAINT labelAlbumConstraint FOREIGN KEY (labelID) REFERENCES label(labelID));";
+				   " CONSTRAINT artistAlbumConstraint FOREIGN KEY (artistID) REFERENCES artist(artistID) ON UPDATE CASCADE," +
+				   " CONSTRAINT genreAlbumConstraint FOREIGN KEY (genreID) REFERENCES genre(genreID) ON UPDATE CASCADE," +
+				   " CONSTRAINT labelAlbumConstraint FOREIGN KEY (labelID) REFERENCES label(labelID) ON UPDATE CASCADE);";
 		stmt.execute(sql);
 		System.out.println("albums Table Created Successfully");
 	}
@@ -70,17 +70,17 @@ public class CreateDatabase {
 		String sql = "DROP TABLE IF EXISTS song;";
 		stmt.execute(sql);
 		sql = "CREATE TABLE song " +
-                   "(songID VARCHAR(25) PRIMARY KEY, " +
-                   " songName VARCHAR(200), " +
-                   " songYear INT, " +
+           "(songID VARCHAR(25) PRIMARY KEY, " +
+           " songName VARCHAR(200) NOT NULL, " +
+           " songYear INT, " +
 				   " songDuration INT, " +
 				   " songTimeSignature INT, " +
 				   " songHotness DECIMAL(11,10), " +
 				   " songTempo INT, " +
-                   " albumID VARCHAR(25), " +
+           " albumID VARCHAR(25), " +
 				   " genreID INT, " +
-				   " CONSTRAINT albumSongConstraint FOREIGN KEY (albumID) REFERENCES album(albumID)," +
-				   " CONSTRAINT genreSongConstraint FOREIGN KEY (genreID) REFERENCES genre(genreID));";
+				   " CONSTRAINT albumSongConstraint FOREIGN KEY (albumID) REFERENCES album(albumID) ON UPDATE CASCADE," +
+				   " CONSTRAINT genreSongConstraint FOREIGN KEY (genreID) REFERENCES genre(genreID) ON UPDATE CASCADE);";
 		stmt.execute(sql);
 		System.out.println("song Table Created Successfully");
 	}
@@ -90,10 +90,10 @@ public class CreateDatabase {
 		String sql = "DROP TABLE IF EXISTS user;";
 		stmt.execute(sql);
 		sql = "CREATE TABLE user " +
-                   "(userID int AUTO_INCREMENT PRIMARY KEY, " +
-                   " userFName VARCHAR(50), " +
+           "(userID int AUTO_INCREMENT PRIMARY KEY, " +
+           " userFName VARCHAR(50) NOT NULL, " +
 				   " username VARCHAR(20) UNIQUE, " +
-				   " userpass VARCHAR(20), " +
+				   " userpass VARCHAR(20) NOT NULL, " +
 				   " userStreet VARCHAR(50), " +
 				   " userCity VARCHAR(50), " +
 				   " userCountry VARCHAR(50)," +
@@ -112,8 +112,8 @@ public class CreateDatabase {
            "(albumLikeID INTEGER AUTO_INCREMENT PRIMARY KEY, " +
            " userID INT, " +
 				   " albumID VARCHAR(25)," +
-				   " CONSTRAINT ulau FOREIGN KEY (userID) REFERENCES user(userID)," +
-				   " CONSTRAINT ulaa FOREIGN KEY (albumID) REFERENCES album(albumID));";
+				   " CONSTRAINT ulau FOREIGN KEY (userID) REFERENCES user(userID) ON UPDATE CASCADE," +
+				   " CONSTRAINT ulaa FOREIGN KEY (albumID) REFERENCES album(albumID) ON UPDATE CASCADE);";
 		stmt.execute(sql);
 		System.out.println("userlikesalbum Table Created Successfully");
 	}
@@ -124,10 +124,10 @@ public class CreateDatabase {
 		stmt.execute(sql);
 		sql = "CREATE TABLE userlikessong " +
           "(songLikeID INT AUTO_INCREMENT PRIMARY KEY, " +
-          " userID INT, " +
+           " userID INT, " +
 				   " songID VARCHAR(25)," +
-				   " CONSTRAINT ulsu FOREIGN KEY (userID) REFERENCES user(userID)," +
-				   " CONSTRAINT ulss FOREIGN KEY (songID) REFERENCES song(songID));";
+				   " CONSTRAINT ulsu FOREIGN KEY (userID) REFERENCES user(userID) ON UPDATE CASCADE," +
+				   " CONSTRAINT ulss FOREIGN KEY (songID) REFERENCES song(songID) ON UPDATE CASCADE);";
 		stmt.execute(sql);
 		System.out.println("userlikessong Table Created Successfully");
 	}
@@ -140,9 +140,9 @@ public class CreateDatabase {
           "(sReviewID INTEGER AUTO_INCREMENT PRIMARY KEY, " +
            " userID INT, " +
 				   " songID VARCHAR(25)," +
-				   " songReview VARCHAR(400), " +
-				   " CONSTRAINT sru FOREIGN KEY (userID) REFERENCES user(userID)," +
-				   " CONSTRAINT srs FOREIGN KEY (songID) REFERENCES song(songID));";
+				   " songReview VARCHAR(400) NOT NULL, " +
+				   " CONSTRAINT sru FOREIGN KEY (userID) REFERENCES user(userID) ON UPDATE CASCADE," +
+				   " CONSTRAINT srs FOREIGN KEY (songID) REFERENCES song(songID) ON UPDATE CASCADE);";
 		stmt.execute(sql);
 		System.out.println("songReview Table Created Successfully");
 	}
@@ -154,10 +154,10 @@ public class CreateDatabase {
 		sql = "CREATE TABLE albumReview " +
           "(aReviewID INTEGER AUTO_INCREMENT PRIMARY KEY, " +
           " userID INT, " +
-				   " albumID VARCHAR(25)," +
-				   " albumReview VARCHAR(400), " +
-				   " CONSTRAINT aru FOREIGN KEY (userID) REFERENCES user(userID)," +
-				   " CONSTRAINT ara FOREIGN KEY (albumID) REFERENCES album(albumID));";
+				  " albumID VARCHAR(25)," +
+				  " albumReview VARCHAR(400), " +
+				  " CONSTRAINT aru FOREIGN KEY (userID) REFERENCES user(userID) ON UPDATE CASCADE," +
+				  " CONSTRAINT ara FOREIGN KEY (albumID) REFERENCES album(albumID) ON UPDATE CASCADE);";
 		stmt.execute(sql);
 		System.out.println("albumReview Table Created Successfully");
 	}
@@ -168,9 +168,9 @@ public class CreateDatabase {
 		stmt.execute(sql);
 		sql = "CREATE TABLE playlist " +
           "(playlistID INTEGER AUTO_INCREMENT PRIMARY KEY, " +
-				   " playlistName VARCHAR(30), " +
+				  " playlistName VARCHAR(30), " +
           " userID INT, " +
-				   " CONSTRAINT playlistUser FOREIGN KEY (userID) REFERENCES user(userID));";
+				  " CONSTRAINT playlistUser FOREIGN KEY (userID) REFERENCES user(userID) ON UPDATE CASCADE);";
 		stmt.execute(sql);
 		System.out.println("playlist Table Created Successfully");
 	}
@@ -182,8 +182,8 @@ public class CreateDatabase {
 		sql = "CREATE TABLE playlistSongMapping " +
           "(songID VARCHAR(25), " +
           " playlistID INT, " +
-				   " CONSTRAINT psms FOREIGN KEY (songID) REFERENCES song(songID), " +
-				   " CONSTRAINT psmp FOREIGN KEY (playlistID) REFERENCES playlist(playlistID));";
+				  " CONSTRAINT psms FOREIGN KEY (songID) REFERENCES song(songID), " +
+				  " CONSTRAINT psmp FOREIGN KEY (playlistID) REFERENCES playlist(playlistID) ON UPDATE CASCADE);";
 		stmt.execute(sql);
 		System.out.println("playlistSongMapping Table Created Successfully");
 	}
@@ -202,46 +202,4 @@ public class CreateDatabase {
 		createPlaylistTable(stmt);
 		createPlaylistSongMappingTable(stmt);
 	}
-
-	/*public static void main(String[] args){
-		Connection conn = null;
-		Statement stmt = null;
-		String username, password, sql;
-		String databaseURL = "jdbc:mysql://localhost:3306/musicspace";
-
-		System.out.println("=== Welcome to MusicSpace Workbench ===");
-		Scanner sc = new Scanner(System.in);
-		System.out.print("Enter the Username: ");
-		username = sc.nextLine();
-		System.out.print("Enter the Password for "+username+" : ");
-		password = sc.nextLine();
-		try{
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			conn = DriverManager.getConnection(databaseURL,username,password);
-
-			if(conn == null){
-				System.out.println("Invalid user credentials");
-				return;
-			}else{
-				System.out.println("Successfully logged In!!!");
-			}
-			stmt = conn.createStatement();
-
-			createArtistTable(stmt);
-			createLabelTable(stmt);
-			createGenreTable(stmt);
-			createAlbumTable(stmt);
-			createSongTable(stmt);
-			createUserTable(stmt);
-			createUserLikesAlbumTable(stmt);
-			createUserLikesSongTable(stmt);
-			createSongReviewTable(stmt);
-			createAlbumReviewTable(stmt);
-			createPlaylistTable(stmt);
-			createPlaylistSongMappingTable(stmt);
-
-		}catch(Exception e){
-			System.out.println("Something went wrong "+e);
-		}
-	}*/
 }
