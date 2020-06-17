@@ -97,7 +97,7 @@ public class MusicSpace{
         System.out.println("\n=========== Options ===========");
         System.out.println("1. Explore Song\n2. Explore Album");
         System.out.println("3. Explore Artist \n4. Know Everything About the Song");
-        System.out.println("5. Explore playlists \n6. My Reviews \n7. Exit");
+        System.out.println("5. Explore playlists \n6. My Reviews \n7. My Likes\n0. Exit");
         System.out.println("===============================");
         Scanner sc = new Scanner(System.in);
         int input = sc.nextInt();
@@ -109,7 +109,8 @@ public class MusicSpace{
           case 4: Song.fullSongMode(stmt, userId); break;
           case 5: Playlist.playlistMode(stmt, userId); break;
           case 6: Review.reviewMode(stmt, userId); break;
-          case 7: System.out.println("Exiting ... "); return;
+          case 7: Like.likeMode(stmt, userId); break;
+          case 0: System.out.println("Exiting ... "); return;
           default: System.out.println("Invalid option, Try again!");
         }
       }
