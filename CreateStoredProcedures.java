@@ -106,7 +106,7 @@ public class CreateStoredProcedures{
 			System.out.println("userlikesalbum procedure created");
 	}
 
-	public void CreateGetSongReviews(Statement stmt) throws Exception{
+	public void createGetSongReviews(Statement stmt) throws Exception{
 			String sql = "DROP PROCEDURE IF EXISTS getSongReviews;";
 			stmt.execute(sql);
 			sql = " CREATE PROCEDURE getSongReviews(IN s VARCHAR(40)) " +
@@ -117,7 +117,7 @@ public class CreateStoredProcedures{
 			System.out.println("getSongReviews procedure created");
 	}
 
-	public void CreateGetAlbumReviews(Statement stmt) throws Exception{
+	public void createGetAlbumReviews(Statement stmt) throws Exception{
 			String sql = "DROP PROCEDURE IF EXISTS getAlbumReviews;";
 			stmt.execute(sql);
 			sql = " CREATE PROCEDURE getAlbumReviews(IN a VARCHAR(40)) " +
@@ -128,7 +128,7 @@ public class CreateStoredProcedures{
 			System.out.println("getAlbumReviews procedure created");
 	}
 
-	public void CreateGetSongLikes(Statement stmt) throws Exception{
+	public void createGetSongLikes(Statement stmt) throws Exception{
 			String sql = "DROP PROCEDURE IF EXISTS getSongLikes;";
 			stmt.execute(sql);
 			sql = " CREATE PROCEDURE getSongLikes(IN s VARCHAR(40)) " +
@@ -139,7 +139,7 @@ public class CreateStoredProcedures{
 			System.out.println("getSongLikes procedure created");
 	}
 
-	public void CreateGetAlbumLikes(Statement stmt) throws Exception{
+	public void createGetAlbumLikes(Statement stmt) throws Exception{
 			String sql = "DROP PROCEDURE IF EXISTS getAlbumLikes;";
 			stmt.execute(sql);
 			sql = " CREATE PROCEDURE getAlbumLikes(IN a VARCHAR(40)) " +
@@ -150,7 +150,7 @@ public class CreateStoredProcedures{
 			System.out.println("getAlbumLikes procedure created");
 	}
 
-	public void CreateGetSongsFromPlaylist(Statement stmt) throws Exception{
+	public void createGetSongsFromPlaylist(Statement stmt) throws Exception{
 			String sql = "DROP PROCEDURE IF EXISTS getSongsFromPlaylist;";
 			stmt.execute(sql);
 			sql = " CREATE PROCEDURE getSongsFromPlaylist(IN p INT) " +
@@ -163,18 +163,46 @@ public class CreateStoredProcedures{
 			System.out.println("getSongsFromPlaylist procedure created");
 	}
 
+	public void createGetUserSongReviews(Statement stmt) throws Exception{
+			String sql = "DROP PROCEDURE IF EXISTS getUserSongReviews;";
+			stmt.execute(sql);
+			sql = " CREATE PROCEDURE getUserSongReviews(IN u INT) " +
+			" BEGIN " +
+			" SELECT * FROM songReview AS r JOIN song AS s " +
+			" ON r.songID = s.songID " +
+			" WHERE userID = u;" +
+			" END";
+			stmt.executeUpdate(sql);
+			System.out.println("getUserSongReviews procedure created");
+	}
+
+	public void createGetUserAlbumReviews(Statement stmt) throws Exception{
+			String sql = "DROP PROCEDURE IF EXISTS getUserAlbumReviews;";
+			stmt.execute(sql);
+			sql = " CREATE PROCEDURE getUserAlbumReviews(IN u INT) " +
+			" BEGIN " +
+			" SELECT * FROM albumReview AS r JOIN album AS a" +
+			" ON r.albumID = a.albumID " +
+			" WHERE userID = u;" +
+			" END";
+			stmt.executeUpdate(sql);
+			System.out.println("getUserAlbumReviews procedure created");
+	}
+
 	public void createProcedures(Statement stmt) throws Exception{
 			createFindSongDetails(stmt);
 			createGetAlbumDetails(stmt);
 			createGetArtistDetails(stmt);
 			createReviewSong(stmt);
 			createUserSongLikes(stmt);
-			CreateGetSongReviews(stmt);
-			CreateGetSongLikes(stmt);
+			createGetSongReviews(stmt);
+			createGetSongLikes(stmt);
 			createReviewAlbum(stmt);
 			createUserAlbumLikes(stmt);
-			CreateGetAlbumReviews(stmt);
-			CreateGetAlbumLikes(stmt);
-			CreateGetSongsFromPlaylist(stmt);
+			createGetAlbumReviews(stmt);
+			createGetAlbumLikes(stmt);
+			createGetSongsFromPlaylist(stmt);
+			createGetUserSongReviews(stmt);
+			createGetUserAlbumReviews(stmt);
 	}
 }

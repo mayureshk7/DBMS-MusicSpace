@@ -183,7 +183,7 @@ public class CreateDatabase {
           "(songID VARCHAR(25), " +
           " playlistID INT, " +
 				  " CONSTRAINT psms FOREIGN KEY (songID) REFERENCES song(songID), " +
-				  " CONSTRAINT psmp FOREIGN KEY (playlistID) REFERENCES playlist(playlistID) ON UPDATE CASCADE);";
+				  " CONSTRAINT psmp FOREIGN KEY (playlistID) REFERENCES playlist(playlistID));";
 		stmt.execute(sql);
 		System.out.println("playlistSongMapping Table Created Successfully");
 	}

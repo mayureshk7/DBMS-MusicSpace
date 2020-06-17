@@ -46,8 +46,16 @@ public class MusicSpace{
         name = sc.nextLine();
         System.out.println("Username : ");
         username = sc.nextLine();
+        if(username.length() < 5){
+          System.out.println("Username should be 5 characters long");
+          continue;
+        }
         System.out.println("Password : ");
         password = sc.nextLine();
+        if(password.length() < 5){
+          System.out.println("password should be 5 characters long");
+          continue;
+        }
         System.out.println("Street : ");
         street = sc.nextLine();
         System.out.println("City : ");
@@ -83,7 +91,7 @@ public class MusicSpace{
     }
   }
 
-  public static void songMode(Statement stmt, int userId){
+  public static void songMode(Statement stmt, int userId) throws Exception {
     System.out.print("Song Name : ");
     Scanner sc = new Scanner(System.in);
     String song = sc.nextLine();
@@ -195,7 +203,7 @@ public class MusicSpace{
     }
   }
 
-  public static void albumMode(Statement stmt, int userId){
+  public static void albumMode(Statement stmt, int userId) throws Exception{
     System.out.print("Album Name : ");
     Scanner sc = new Scanner(System.in);
     String album = sc.nextLine();
@@ -308,7 +316,7 @@ public class MusicSpace{
   }
 
 
-  public static void fullSongMode(Statement stmt, int userId){
+  public static void fullSongMode(Statement stmt, int userId) throws Exception{
     System.out.print("Song Name : ");
     Scanner sc = new Scanner(System.in);
     String song = sc.nextLine();
@@ -342,8 +350,8 @@ public class MusicSpace{
     }
   }
 
-  public static void playlistMode(Statement stmt, int userId){
-    System.out.print("1. Create Playlist \n2. My Playlists\n");
+  public static void playlistMode(Statement stmt, int userId) throws Exception {
+    System.out.print("1. Create Playlist \n2. My Playlists\n3. Delete Playlist\n");
     Scanner sc = new Scanner(System.in);
     int input = sc.nextInt();
     String sql = "";
@@ -383,12 +391,36 @@ public class MusicSpace{
         rs = stmt.executeQuery(sql);
         System.out.println("========= Songs in playlist ==========");
         int j = 0;
+        HashMap<Integer, String> mm = new HashMap<Integer, String>();
         while(rs.next()){
           j++;
+          mm.put(j, rs.getString("songID"));
           System.out.println(j+". "+rs.getString("songName"));
           System.out.println("-------------------------------");
         }
         System.out.println("Found "+j+" songs!");
+        System.out.println("-------------------------------");
+        System.out.println("1. Delete Playlist\n2. Delete specific Song \n3. Home");
+        int ans = sc.nextInt();
+        if(ans == 1){
+          sql = "DELETE FROM playlist WHERE playlistID = "+hm.get(input)+";";
+          stmt.execute(sql);
+          System.out.println("Playlist removed Successfully");
+        }else if(ans == 2){
+          System.out.println("Choose a song number to remove from playlist");
+          int song = sc.nextInt();
+          if(song<1 || song > j) {
+            System.out.println("Invalid Choice!");
+            return;
+          }
+          sql = "DELETE FROM playlistsongmapping WHERE playlistID = "+hm.get(input)+" AND songID = \""+mm.get(song)+"\";";
+          stmt.execute(sql);
+          System.out.println("Song removed Successfully");
+        }if(ans == 3){
+          return;
+        }else{
+          System.out.println("Invalid Choice");
+        }
       }catch(Exception e){
         System.out.println("Something went wrong");
       }
@@ -398,13 +430,120 @@ public class MusicSpace{
     }
   }
 
+    public static void reviewMode(Statement stmt, int userId) throws Exception{
+      System.out.println("1. Song Review \n2. Album Review");
+      Scanner sc = new Scanner(System.in);
+      int input = sc.nextInt();
+      sc.nextLine();
+      String sql = "";
+      if(input == 1){
+        HashMap<Integer, Integer> hm = new HashMap<Integer, Integer>();
+        sql = "CALL getUserSongReviews("+userId+");";
+        try{
+          ResultSet rs = stmt.executeQuery(sql);
+          int i =0;
+          System.out.println("-------------------------------");
+          while(rs.next()){
+            hm.put(++i, rs.getInt("sReviewID"));
+            System.out.println(i+". Song Name : "+rs.getString("songName"));
+            System.out.println("Review : "+rs.getString("songReview"));
+            System.out.println("-------------------------------");
+          }
+          System.out.println("Found "+i+" Reviews!");
+          System.out.println("-------------------------------");
+          System.out.println("1. Delete Review\n2. Update Review\n3. Home");
+          switch(sc.nextInt()){
+            case 1:{
+              System.out.println("Select Review Number : ");
+              int r = sc.nextInt();
+              if(r<0||r>i){
+                System.out.println("Invalid option selected");
+              }
+              sql = "DELETE FROM songReview WHERE sReviewID ="+hm.get(r)+";";
+              stmt.execute(sql);
+              System.out.println("Review Deleted Successfully");
+            }
+            break;
+            case 2:{
+              System.out.println("Select Review Number : ");
+              int r = sc.nextInt();
+              sc.nextLine();
+              if(r<0||r>i){
+                System.out.println("Invalid option selected");
+              }
+              System.out.println("Enter Updated Review : ");
+              String nr = sc.nextLine();
+              sql = "UPDATE songReview SET songReview = \""+nr+"\" WHERE sReviewID ="+hm.get(r)+";";
+              stmt.execute(sql);
+              System.out.println("Review Updated Successfully");
+            }
+            break;
+            default: return;
+          }
+        }catch(Exception e){
+          System.out.println("Something went wronng"+e);
+          return;
+        }
+      }else if(input == 2){
+        HashMap<Integer, Integer> hm = new HashMap<Integer, Integer>();
+        sql = "CALL getUserAlbumReviews("+userId+");";
+        try{
+          ResultSet rs = stmt.executeQuery(sql);
+          int i =0;
+          System.out.println("-------------------------------");
+          while(rs.next()){
+            hm.put(++i, rs.getInt("aReviewID"));
+            System.out.println(i+". Album Name : "+rs.getString("albumName"));
+            System.out.println("Review : "+rs.getString("albumReview"));
+            System.out.println("-------------------------------");
+          }
+          System.out.println("Found "+i+" Reviews!");
+          System.out.println("-------------------------------");
+          System.out.println("1. Delete Review\n2. Update Review\n3. Home");
+          switch(sc.nextInt()){
+            case 1:{
+              System.out.println("Select Review Number : ");
+              int r = sc.nextInt();
+              if(r<0||r>i){
+                System.out.println("Invalid option selected");
+              }
+              sql = "DELETE FROM albumReview WHERE aReviewID ="+hm.get(r)+";";
+              stmt.execute(sql);
+              System.out.println("Review Deleted Successfully");
+            }
+            break;
+            case 2:{
+              System.out.println("Select Review Number : ");
+              int r = sc.nextInt();
+              sc.nextLine();
+              if(r<0||r>i){
+                System.out.println("Invalid option selected");
+              }
+              System.out.println("Enter Updated Review : ");
+              String nr = sc.nextLine();
+              sql = "UPDATE albumReview SET albumReview = \""+nr+"\" WHERE aReviewID ="+hm.get(r)+";";
+              stmt.execute(sql);
+              System.out.println("Review Updated Successfully");
+            }
+            break;
+            default: return;
+          }
+        }catch(Exception e){
+          System.out.println("Something went wrong"+e);
+          return;
+        }
+      }else{
+          System.out.println("Invalid option selected");
+      }
+    }
+
   public static void userMode(Connection conn, Statement stmt) throws Exception{
       int userId = getUser(conn, stmt);
       while(true){
         System.out.println("\n=========== Options ===========");
         System.out.println("1. Explore Song\n2. Explore Album");
         System.out.println("3. Explore Artist \n4. Know Everything About the Song");
-        System.out.println("5. Explore playlists \n6. Exit");
+        System.out.println("5. Explore playlists \n6. My Reviews \n7. Exit");
         System.out.println("===============================");
         Scanner sc = new Scanner(System.in);
         int input = sc.nextInt();
@@ -415,7 +554,8 @@ public class MusicSpace{
           case 3: artistMode(stmt, userId); break;
           case 4: fullSongMode(stmt, userId); break;
           case 5: playlistMode(stmt, userId); break;
-          case 6: System.out.println("Exiting ... "); return;
+          case 6: reviewMode(stmt, userId); break;
+          case 7: System.out.println("Exiting ... "); return;
           default: System.out.println("Invalid option, Try again!");
         }
       }
